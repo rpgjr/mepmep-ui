@@ -83,7 +83,7 @@ function History() {
         <div className="history-item" key={`${h.mediaType}${h.tmdbId}`}>
           <Link to={`/watch/${h.mediaType}/${h.tmdbId}?s=${h.season}&e=${h.episode}`} className="history-img" style={{ backgroundImage: `url(${img(h.backdropPath ?? h.posterPath, "w500")})` }}>
             <span className="play">▶</span>
-            <div className="bar"><div style={{ width: `${h.durationSec ? Math.min(100, (h.positionSec / h.durationSec) * 100) : 0}%` }} /></div>
+            {h.durationSec > 0 && <div className="bar"><div style={{ width: `${Math.min(100, (h.positionSec / h.durationSec) * 100)}%` }} /></div>}
           </Link>
           <div className="history-info">
             <strong>{h.title}</strong>

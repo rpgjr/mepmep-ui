@@ -51,7 +51,7 @@ export default function Home() {
               <Link key={`${h.mediaType}${h.tmdbId}`} className="resume" to={`/watch/${h.mediaType}/${h.tmdbId}?s=${h.season}&e=${h.episode}`}>
                 <div className="resume-img" style={{ backgroundImage: `url(${img(h.backdropPath ?? h.posterPath, "w500")})` }}>
                   <span className="play">▶</span>
-                  <div className="bar"><div style={{ width: `${h.durationSec ? Math.min(100, (h.positionSec / h.durationSec) * 100) : 0}%` }} /></div>
+                  {h.durationSec > 0 && <div className="bar"><div style={{ width: `${Math.min(100, (h.positionSec / h.durationSec) * 100)}%` }} /></div>}
                 </div>
                 <div className="card-title">{h.title}</div>
                 {h.mediaType === "tv" && <div className="card-sub">S{h.season} · E{h.episode}</div>}

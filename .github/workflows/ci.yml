@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install exact locked dependencies
+        run: npm ci
+      - name: Type-check and build
+        run: npm run build
+        env:
+          VITE_API_URL: https://example.invalid/api # placeholder, real value is set in Vercel
+      - name: Check dependencies for known vulnerabilities
+        run: npm audit --audit-level=high
+        continue-on-error: true # report only, do not block
+      - name: Keep the built site
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+      # Deploying: Vercel's GitHub integration deploys every push by itself
+      # (preview for pull requests, production for main). No extra step needed.
