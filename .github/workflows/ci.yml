@@ -27,7 +27,7 @@ jobs:
         run: npm audit --audit-level=high
         continue-on-error: true # report only, do not block
       - name: Keep the built site
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist
