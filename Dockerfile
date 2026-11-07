@@ -1,5 +1,5 @@
 # ---- build stage: turn the React source into static files ----
-FROM node:22-alpine AS build
+FROM node:25-alpine AS build
 WORKDIR /app
 # Copy package files first so Docker can cache "npm ci" between builds
 COPY package.json package-lock.json ./
