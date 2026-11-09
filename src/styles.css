@@ -217,3 +217,4 @@ input:focus, select:focus, .btn:focus-visible, a:focus-visible { outline: 2px so
 .popup-note { margin: 0 0 14px; padding: 10px 14px; border-radius: 10px; background: rgba(251, 191, 36, .12); border: 1px solid rgba(251, 191, 36, .45); color: #fcd34d; font-size: 0.88rem; }
 .popup-note b { color: #fff; }
 @media (max-width: 640px) { .popup-note { margin-inline: var(--gutter); } }
+.spinner-hint { max-width: 440px; margin: -40px auto 60px; padding: 0 var(--gutter); text-align: center; color: var(--muted); font-size: 0.9rem; }

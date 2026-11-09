@@ -1,4 +1,4 @@
-import { useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { Card } from "../types";
 import PosterCard from "./PosterCard";
 
@@ -40,6 +40,23 @@ export function Grid({ cards }: { cards: Card[] }) {
   );
 }
 
-export const Spinner = () => <div className="spinner" role="status" aria-label="Loading" />;
+/** Loading spinner. After 6 seconds it explains the wait: free hosting puts the server to sleep when idle. */
+export function Spinner() {
+  const [slow, setSlow] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setSlow(true), 6000);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <div role="status" aria-label="Loading">
+      <div className="spinner" />
+      {slow && (
+        <p className="spinner-hint">
+          Waking up the server. It sleeps when nobody has used it for a while, and this can take up to 2-3 minutes. Thanks for waiting.
+        </p>
+      )}
+    </div>
+  );
+}
 
 export const ErrorBox = ({ message }: { message: string }) => <p className="error-box">⚠ {message}</p>;
