@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { server } from "../api";
 import type { Card } from "../types";
 import PosterCard from "./PosterCard";
+import WakeUp from "./WakeUp";
 
 /** Horizontal scrolling row with a heading. The scrollbar is hidden; arrows (mouse) or swipe (touch) scroll it. */
 export function Row({ title, cards, action }: { title: string; cards: Card[]; action?: ReactNode }) {
@@ -40,21 +42,21 @@ export function Grid({ cards }: { cards: Card[] }) {
   );
 }
 
-/** Loading spinner. After 6 seconds it explains the wait: free hosting puts the server to sleep when idle. */
+/** How long a load may take before we assume the free server was asleep. A normal answer takes well under a second. */
+const SLOW_MS = 5000;
+
+/** Loading spinner. If the server has not answered after 5 seconds, show the dancing rat until it does. */
 export function Spinner() {
   const [slow, setSlow] = useState(false);
   useEffect(() => {
-    const t = setTimeout(() => setSlow(true), 6000);
+    if (server.awake) return;
+    const t = setTimeout(() => setSlow(!server.awake), SLOW_MS);
     return () => clearTimeout(t);
   }, []);
+  if (slow && !server.awake) return <WakeUp />;
   return (
     <div role="status" aria-label="Loading">
       <div className="spinner" />
-      {slow && (
-        <p className="spinner-hint">
-          Waking up the server. It sleeps when nobody has used it for a while, and this can take up to 2-3 minutes. Thanks for waiting.
-        </p>
-      )}
     </div>
   );
 }

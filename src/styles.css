@@ -217,4 +217,11 @@ input:focus, select:focus, .btn:focus-visible, a:focus-visible { outline: 2px so
 .popup-note { margin: 0 0 14px; padding: 10px 14px; border-radius: 10px; background: rgba(251, 191, 36, .12); border: 1px solid rgba(251, 191, 36, .45); color: #fcd34d; font-size: 0.88rem; }
 .popup-note b { color: #fff; }
 @media (max-width: 640px) { .popup-note { margin-inline: var(--gutter); } }
-.spinner-hint { max-width: 440px; margin: -40px auto 60px; padding: 0 var(--gutter); text-align: center; color: var(--muted); font-size: 0.9rem; }
+
+/* Waking-up screen: dancing rat and a hidden song player */
+.wakeup { background: radial-gradient(ellipse 340px 220px at 50% 130px, rgba(139, 92, 246, 0.28), transparent 70%); display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px var(--gutter) 64px; text-align: center; }
+.wakeup h2 { margin: 0; }
+.wakeup .muted { max-width: 440px; margin: 0; }
+.rat-gif { width: min(300px, 70vw); height: auto; }
+/* The song's player is kept off screen: only its sound is wanted */
+.song-audio { position: absolute; width: 200px; height: 200px; border: 0; opacity: 0; clip-path: inset(50%); pointer-events: none; }

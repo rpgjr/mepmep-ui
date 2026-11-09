@@ -4,6 +4,9 @@ import type { Card, MediaType } from "./types";
 const BASE = import.meta.env.VITE_API_URL ?? "/api";
 const TOKEN_KEY = "mepmep.token";
 
+/** Becomes true once the backend has answered. Until then a slow load means "free hosting is still waking up". */
+export const server = { awake: false };
+
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
 export const setToken = (t: string | null) =>
   t ? localStorage.setItem(TOKEN_KEY, t) : localStorage.removeItem(TOKEN_KEY);
@@ -24,6 +27,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   if (token) headers.set("Authorization", `Bearer ${token}`);
 
   const res = await fetch(BASE + path, { ...init, headers });
+  if (res.status < 500) server.awake = true;
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
     throw new ApiError(res.status, body.message ?? `Request failed (${res.status})`);
