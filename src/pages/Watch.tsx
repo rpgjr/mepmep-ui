@@ -9,6 +9,7 @@ import type { Card, Episode, MediaType, Progress, TitleDetail } from "../types";
 
 const VIDLINK = "https://vidlink.pro";
 const EMBEDWAVE = "https://embedwave.cc/embed";
+const VIDY = "https://vidy.st";
 const COLOR = "8B5CF6"; // player accent color, same purple as the site
 
 /** The video sources a viewer can pick. Only VidLink reports progress, so only it can resume mid-episode. */
@@ -16,11 +17,18 @@ const SOURCES = [
   { id: "vidlink", label: "VidLink · resume, may show pop-ups" },
   { id: "vidlink-jw", label: "VidLink alt player · fewer pop-ups" },
   { id: "embedwave", label: "EmbedWave · no ads, no resume" },
+  { id: "vidy", label: "Vidy · opens at saved time, no tracking" },
 ] as const;
 type SourceId = (typeof SOURCES)[number]["id"];
 
 /** Builds the embed URL for the chosen source. `startAt` is the second to resume from (VidLink only). */
 function playerUrl(source: SourceId, type: MediaType, id: string, season: number, episode: number, startAt: number) {
+  if (source === "vidy") {
+    const path = type === "movie" ? `/movie/${id}` : `/tv/${id}/${season}/${episode}`;
+    const q = new URLSearchParams({ color: COLOR, autoplay: "true" });
+    if (startAt > 10) q.set("progress", String(startAt));
+    return `${VIDY}${path}?${q}`;
+  }
   if (source === "embedwave") {
     const path = type === "movie" ? `/movie/${id}` : `/tv/${id}/${season}/${episode}`;
     return `${EMBEDWAVE}${path}?autoplay=1`;
@@ -103,7 +111,7 @@ export default function Watch() {
   // ---- listen to VidLink ----
   const frame = useRef<HTMLIFrameElement>(null);
   useEffect(() => {
-    if (source === "embedwave") return; // EmbedWave sends no events
+    if (source === "embedwave" || source === "vidy") return; // these send no events we read
     const onMessage = (ev: MessageEvent) => {
       // Only trust messages that come from VidLink AND from our own iframe.
       if (ev.origin !== VIDLINK || ev.source !== frame.current?.contentWindow) return;
