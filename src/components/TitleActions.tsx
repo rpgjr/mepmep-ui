@@ -39,10 +39,10 @@ export default function TitleActions({ card }: { card: Card }) {
 
   return (
     <>
-      <button className={`btn ghost ${state.favorite ? "on" : ""}`} onClick={() => toggle("favorites", "favorite")} aria-pressed={state.favorite}>
+      <button type="button" className={`btn ghost ${state.favorite ? "on" : ""}`} onClick={() => toggle("favorites", "favorite")} aria-pressed={state.favorite}>
         {state.favorite ? "♥ Favorited" : "♡ Favorite"}
       </button>
-      <button className={`btn ghost ${state.watchlist ? "on" : ""}`} onClick={() => toggle("watchlist", "watchlist")} aria-pressed={state.watchlist}>
+      <button type="button" className={`btn ghost ${state.watchlist ? "on" : ""}`} onClick={() => toggle("watchlist", "watchlist")} aria-pressed={state.watchlist}>
         {state.watchlist ? "✓ In My List" : "＋ My List"}
       </button>
     </>

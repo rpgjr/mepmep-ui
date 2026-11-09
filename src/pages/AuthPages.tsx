@@ -47,7 +47,7 @@ function AuthForm({ mode }: { mode: "login" | "register" }) {
             autoComplete={isLogin ? "current-password" : "new-password"} />
         </label>
         {error && <p className="error-box" role="alert">{error}</p>}
-        <button className="btn block" disabled={busy}>{busy ? "Please wait…" : isLogin ? "Log in" : "Sign up"}</button>
+        <button type="submit" className="btn block" disabled={busy}>{busy ? "Please wait…" : isLogin ? "Log in" : "Sign up"}</button>
         <p className="muted center">
           {isLogin ? <>New here? <Link to="/register">Create an account</Link></> : <>Have an account? <Link to="/login">Log in</Link></>}
         </p>
