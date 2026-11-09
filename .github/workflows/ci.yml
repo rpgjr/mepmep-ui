@@ -8,9 +8,30 @@ on:
 permissions:
   contents: read
 
+# A newer push to the same branch cancels the older run
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  # ---------- 1. code style and common mistakes ----------
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Lint (Biome)
+        run: npm run lint
+
+  # ---------- 2. type-check and build ----------
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -31,5 +52,30 @@ jobs:
         with:
           name: dist
           path: dist
-      # Deploying: Vercel's GitHub integration deploys every push by itself
-      # (preview for pull requests, production for main). No extra step needed.
+
+  # ---------- 3. click through the site in a real browser (fake API) ----------
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install the browser Playwright drives
+        run: npx playwright install --with-deps chromium
+      - name: Run the UI flow tests
+        run: npm run test:e2e
+      - name: Keep the test report when something failed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report
+            test-results
+
+  # Deploying: Vercel's GitHub integration deploys every push by itself
+  # (preview for pull requests, production for main). No extra step needed.

@@ -24,14 +24,14 @@ export default function Navbar() {
           <NavLink to="/tv">Series</NavLink>
           <NavLink to="/my/watchlist">My List</NavLink>
         </nav>
-        <form className="search" onSubmit={onSearch} role="search">
+        <form className="search" onSubmit={onSearch}>
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search movies & series" aria-label="Search" />
         </form>
         <div className="nav-user">
           {user ? (
             <>
               <span className="hello">Hi, {user.displayName}</span>
-              <button className="btn ghost sm" onClick={logout}>Log out</button>
+              <button type="button" className="btn ghost sm" onClick={logout}>Log out</button>
             </>
           ) : (
             <>

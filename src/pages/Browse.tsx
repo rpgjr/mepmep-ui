@@ -59,7 +59,7 @@ export default function Browse({ type }: { type: MediaType }) {
       <Grid cards={items} />
       {res.loading && <Spinner />}
       {!res.loading && res.data && page < Math.min(res.data.total_pages, 500) && (
-        <div className="center"><button className="btn ghost" onClick={() => setPage(page + 1)}>Load more</button></div>
+        <div className="center"><button type="button" className="btn ghost" onClick={() => setPage(page + 1)}>Load more</button></div>
       )}
     </div>
   );

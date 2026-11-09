@@ -59,7 +59,7 @@ function Saved({ list }: { list: "favorites" | "watchlist" }) {
             <div className="poster">{c.posterPath ? <img src={img(c.posterPath)} alt={c.title} loading="lazy" /> : <div className="no-poster">{c.title}</div>}</div>
             <div className="card-title">{c.title}</div>
           </Link>
-          <button className="btn ghost sm block" onClick={async () => {
+          <button type="button" className="btn ghost sm block" onClick={async () => {
             await del(`/library/${list}/${c.mediaType}/${c.id}`);
             setRemoved((r) => [...r, `${c.mediaType}${c.id}`]);
           }}>Remove</button>
@@ -90,7 +90,7 @@ function History() {
             <span className="muted">{h.mediaType === "tv" ? `Season ${h.season} · Episode ${h.episode}` : "Movie"}</span>
             <div className="actions">
               <Link className="btn sm" to={`/watch/${h.mediaType}/${h.tmdbId}?s=${h.season}&e=${h.episode}`}>Resume</Link>
-              <button className="btn ghost sm" onClick={async () => { await del(`/history/${h.mediaType}/${h.tmdbId}`); setRemoved((r) => [...r, `${h.mediaType}${h.tmdbId}`]); }}>Remove</button>
+              <button type="button" className="btn ghost sm" onClick={async () => { await del(`/history/${h.mediaType}/${h.tmdbId}`); setRemoved((r) => [...r, `${h.mediaType}${h.tmdbId}`]); }}>Remove</button>
             </div>
           </div>
         </div>

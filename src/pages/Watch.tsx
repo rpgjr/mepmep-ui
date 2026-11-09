@@ -157,7 +157,7 @@ export default function Watch() {
       <div className="watch-actions">
         <TitleActions card={card} />
         {type === "tv" && nextEp && (
-          <button className="btn" onClick={() => goTo(season, nextEp.episode_number)}>Next episode ▶</button>
+          <button type="button" className="btn" onClick={() => goTo(season, nextEp.episode_number)}>Next episode ▶</button>
         )}
         <label className="server">
           <span className="muted">Source</span>
@@ -186,7 +186,7 @@ export default function Watch() {
           {episodes.loading && <Spinner />}
           <div className="ep-list">
             {episodes.data?.episodes.map((ep) => (
-              <button key={ep.episode_number} className={`ep ${ep.episode_number === episode ? "current" : ""}`} onClick={() => { goTo(season, ep.episode_number); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
+              <button type="button" key={ep.episode_number} className={`ep ${ep.episode_number === episode ? "current" : ""}`} onClick={() => { goTo(season, ep.episode_number); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
                 <div className="ep-img" style={{ backgroundImage: ep.still_path ? `url(${img(ep.still_path, "w300")})` : undefined }}>
                   <span className="ep-num">{ep.episode_number}</span>
                 </div>

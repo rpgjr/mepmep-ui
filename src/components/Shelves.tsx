@@ -15,7 +15,7 @@ export function Row({ title, cards, action }: { title: string; cards: Card[]; ac
         {action}
       </div>
       <div className="row-wrap">
-        <button className="row-arrow left" onClick={() => scrollBy(-1)} aria-label={`Scroll ${title} left`}>‹</button>
+        <button type="button" className="row-arrow left" onClick={() => scrollBy(-1)} aria-label={`Scroll ${title} left`}>‹</button>
         <div className="row-scroll" ref={scroller}>
           {cards.map((c) => (
             <div className="row-item" key={`${c.mediaType}-${c.id}`}>
@@ -23,7 +23,7 @@ export function Row({ title, cards, action }: { title: string; cards: Card[]; ac
             </div>
           ))}
         </div>
-        <button className="row-arrow right" onClick={() => scrollBy(1)} aria-label={`Scroll ${title} right`}>›</button>
+        <button type="button" className="row-arrow right" onClick={() => scrollBy(1)} aria-label={`Scroll ${title} right`}>›</button>
       </div>
     </section>
   );
