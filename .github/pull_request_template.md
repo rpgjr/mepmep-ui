@@ -4,14 +4,14 @@
 
 ## How I tested it
 
-- [ ] `mvn -B verify` passes (backend) or `npm run build` passes (UI)
-- [ ] Ran it locally with `docker compose up --build`
-- [ ] Checked it on the Vercel preview link (UI changes)
+- [ ] `npm run lint` and `npm run build` pass
+- [ ] `npm run test:e2e` passes (or I added a test for the change)
+- [ ] Ran it with `npm run dev` and clicked through the change
 
-## Database
+## Config
 
-- [ ] No database change
-- [ ] New Flyway migration added (file name: `V__...sql`)
+- [ ] No new environment variable
+- [ ] New environment variable added to `.env.example` and set in Vercel
 
 ## Risk and rollback
 
