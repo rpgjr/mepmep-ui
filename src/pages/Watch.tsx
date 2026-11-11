@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ArrowLeft, Play } from "lucide-react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { api, img, put } from "../api";
 import { useAuth } from "../auth";
+import Dropdown from "../components/Dropdown";
 import { ErrorBox, Spinner } from "../components/Shelves";
 import TitleActions from "../components/TitleActions";
 import { useGet } from "../hooks";
@@ -139,75 +144,99 @@ export default function Watch() {
   const seasons = (t.seasons ?? []).filter((s) => s.season_number > 0);
   const currentEp = episodes.data?.episodes.find((e) => e.episode_number === episode);
 
+  const isTv = type === "tv";
   return (
-    <div className="watch">
-      <div className="watch-top">
-        <Link to={`/title/${type}/${id}`} className="back">← Details</Link>
-        <h1>{name}{type === "tv" && <span className="muted"> · S{season} E{episode}{currentEp ? ` – ${currentEp.name}` : ""}</span>}</h1>
-      </div>
+    <div className="mx-auto max-w-425 pt-4 sm:px-6">
+      <div className={cn("grid gap-6", isTv && "lg:grid-cols-[minmax(0,1fr)_24rem]")}>
+        {/* Theater: the player, then what you can do with it */}
+        <div className="min-w-0">
+          <div className="mb-3 flex flex-col gap-1.5 px-4 sm:px-0">
+            <Link to={`/title/${type}/${id}`} className="inline-flex items-center gap-1 text-sm font-semibold text-ring"><ArrowLeft className="size-4" />Details</Link>
+            <h1 className="text-2xl font-extrabold tracking-tight">{name}{isTv && <span className="font-normal text-muted-foreground"> · S{season} E{episode}{currentEp ? ` – ${currentEp.name}` : ""}</span>}</h1>
+          </div>
 
-      <div className="player">
-        {startAt === null ? (
-          <Spinner />
-        ) : (
-          <iframe
-            ref={frame}
-            key={`${source}-${type}-${id}-${season}-${episode}`}
-            src={playerUrl(source, type, id, season, episode, startAt)}
-            title={`Player – ${name}`}
-            allowFullScreen
-            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-            referrerPolicy={source === "embedwave" ? "no-referrer" : undefined}
-          />
+          <div className="relative grid aspect-video w-full place-items-center overflow-hidden bg-black shadow-2xl shadow-primary/10 ring-1 ring-white/10 sm:rounded-xl">
+            {startAt === null ? (
+              <Spinner />
+            ) : (
+              <iframe
+                className="absolute inset-0 size-full border-0"
+                ref={frame}
+                key={`${source}-${type}-${id}-${season}-${episode}`}
+                src={playerUrl(source, type, id, season, episode, startAt)}
+                title={`Player – ${name}`}
+                allowFullScreen
+                allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+                referrerPolicy={source === "embedwave" ? "no-referrer" : undefined}
+              />
+            )}
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center gap-2.5 px-4 sm:px-0">
+            <TitleActions card={card} />
+            {isTv && nextEp && (
+              <Button type="button" onClick={() => goTo(season, nextEp.episode_number)}>Next episode<Play className="fill-current" /></Button>
+            )}
+            <div className="ml-auto flex min-w-0 items-center gap-2">
+              <span className="text-sm text-muted-foreground">Source</span>
+              <Dropdown
+                label="Video source"
+                value={source}
+                onChange={(v) => pickSource(v as SourceId)}
+                options={SOURCES.map((s) => ({ value: s.id, label: s.label }))}
+                className="h-9 max-w-[70vw]"
+              />
+            </div>
+            {!user && <span className="text-sm text-muted-foreground">Log in to save your progress. <Link className="text-ring" to="/login" state={{ from: `/watch/${type}/${id}` }}>Log in</Link></span>}
+          </div>
+
+          {source !== "embedwave" && (
+            <Alert role="note" className="mx-4 mt-4 w-auto border-amber-400/45 bg-amber-400/10 text-sm text-amber-300 sm:mx-0 sm:w-full">
+              <AlertDescription className="text-amber-300">
+                ⚠ VidLink can open pop-up tabs when you click the player. Close them, or switch <b className="text-foreground">Source</b> to EmbedWave (no ads).
+                A browser ad blocker such as uBlock Origin, or Brave, stops pop-ups for good.
+              </AlertDescription>
+            </Alert>
+          )}
+        </div>
+
+        {isTv && (
+          <aside className="mx-4 min-w-0 self-start rounded-xl bg-card/60 p-3 ring-1 ring-white/5 sm:mx-0 lg:sticky lg:top-18 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h2 className="text-lg font-bold">Episodes</h2>
+              <Dropdown
+                label="Season"
+                value={String(season)}
+                onChange={(v) => goTo(Number(v), 1)}
+                options={seasons.map((s) => ({ value: String(s.season_number), label: s.name }))}
+              />
+            </div>
+            {episodes.loading && <Spinner />}
+            <div className="grid gap-2">
+              {episodes.data?.episodes.map((ep) => (
+                <button
+                  type="button"
+                  key={ep.episode_number}
+                  className={cn(
+                    "flex gap-3 rounded-lg border border-transparent p-2 text-left transition-colors hover:bg-muted",
+                    ep.episode_number === episode && "border-primary bg-primary/15",
+                  )}
+                  onClick={() => { goTo(season, ep.episode_number); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                >
+                  <div className="relative aspect-video w-32 shrink-0 rounded-md bg-muted bg-cover bg-center max-sm:w-28" style={{ backgroundImage: ep.still_path ? `url(${img(ep.still_path, "w300")})` : undefined }}>
+                    <span className="absolute bottom-1 left-1 rounded bg-black/75 px-1.5 text-xs font-bold">{ep.episode_number}</span>
+                  </div>
+                  <div className="min-w-0">
+                    <strong className="line-clamp-1 block text-sm">{ep.name}</strong>
+                    <span className="text-xs text-muted-foreground">{ep.runtime ? `${ep.runtime}m` : ""}{ep.air_date ? ` · ${ep.air_date}` : ""}</span>
+                    <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{ep.overview}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </aside>
         )}
       </div>
-
-      <div className="watch-actions">
-        <TitleActions card={card} />
-        {type === "tv" && nextEp && (
-          <button type="button" className="btn" onClick={() => goTo(season, nextEp.episode_number)}>Next episode ▶</button>
-        )}
-        <label className="server">
-          <span className="muted">Source</span>
-          <select value={source} onChange={(e) => pickSource(e.target.value as SourceId)} aria-label="Video source">
-            {SOURCES.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
-          </select>
-        </label>
-        {!user && <span className="muted">Log in to save your progress. <Link to="/login" state={{ from: `/watch/${type}/${id}` }}>Log in</Link></span>}
-      </div>
-
-      {source !== "embedwave" && (
-        <p className="popup-note" role="note">
-          ⚠ VidLink can open pop-up tabs when you click the player. Close them, or switch <b>Source</b> to EmbedWave (no ads).
-          A browser ad blocker such as uBlock Origin, or Brave, stops pop-ups for good.
-        </p>
-      )}
-
-      {type === "tv" && (
-        <section className="episodes">
-          <div className="row-head">
-            <h2>Episodes</h2>
-            <select value={season} onChange={(e) => goTo(Number(e.target.value), 1)} aria-label="Season">
-              {seasons.map((s) => <option key={s.season_number} value={s.season_number}>{s.name}</option>)}
-            </select>
-          </div>
-          {episodes.loading && <Spinner />}
-          <div className="ep-list">
-            {episodes.data?.episodes.map((ep) => (
-              <button type="button" key={ep.episode_number} className={`ep ${ep.episode_number === episode ? "current" : ""}`} onClick={() => { goTo(season, ep.episode_number); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
-                <div className="ep-img" style={{ backgroundImage: ep.still_path ? `url(${img(ep.still_path, "w300")})` : undefined }}>
-                  <span className="ep-num">{ep.episode_number}</span>
-                </div>
-                <div className="ep-text">
-                  <strong>{ep.name}</strong>
-                  <span className="muted">{ep.runtime ? `${ep.runtime}m` : ""}{ep.air_date ? ` · ${ep.air_date}` : ""}</span>
-                  <p>{ep.overview}</p>
-                </div>
-              </button>
-            ))}
-          </div>
-        </section>
-      )}
     </div>
   );
 }

@@ -10,11 +10,11 @@ export default function Search() {
   const cards = toCards(data?.results ?? []);
 
   return (
-    <div className="page">
-      <h1>{q ? <>Results for “{q}”</> : "Search"}</h1>
+    <div className="mx-auto max-w-400 px-4 py-6 md:px-10">
+      <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">{q ? <>Results for “{q}”</> : "Search"}</h1>
       {loading && <Spinner />}
       {error && <ErrorBox message={error} />}
-      {!loading && q && !cards.length && !error && <p className="empty">Nothing found. Try another title.</p>}
+      {!loading && q && !cards.length && !error && <p className="px-4 py-12 text-center text-muted-foreground">Nothing found. Try another title.</p>}
       <Grid cards={cards} />
     </div>
   );

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { toCards } from "../api";
+import { Button } from "@/components/ui/button";
+import Dropdown from "../components/Dropdown";
 import { Grid, Spinner, ErrorBox } from "../components/Shelves";
 import { useGet } from "../hooks";
 import type { Genre, MediaType } from "../types";
@@ -44,22 +46,22 @@ export default function Browse({ type }: { type: MediaType }) {
   };
 
   return (
-    <div className="page">
-      <h1>{type === "movie" ? "Movies" : "Series"}</h1>
-      <div className="filters">
-        <select value={genre} onChange={(e) => set("genre", e.target.value)} aria-label="Genre">
-          <option value="">All genres</option>
-          {genres.data?.genres.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
-        </select>
-        <select value={sort} onChange={(e) => set("sort", e.target.value)} aria-label="Sort">
-          {SORTS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
-        </select>
+    <div className="mx-auto max-w-400 px-4 py-6 md:px-10">
+      <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">{type === "movie" ? "Movies" : "Series"}</h1>
+      <div className="sticky top-14 z-10 -mx-4 mt-4 flex flex-wrap gap-2.5 bg-background/80 px-4 py-3 backdrop-blur-xl md:-mx-10 md:px-10">
+        <Dropdown
+          label="Genre"
+          value={genre || "all"}
+          onChange={(v) => set("genre", v === "all" ? "" : v)}
+          options={[{ value: "all", label: "All genres" }, ...(genres.data?.genres.map((g) => ({ value: String(g.id), label: g.name })) ?? [])]}
+        />
+        <Dropdown label="Sort" value={sort} onChange={(v) => set("sort", v)} options={SORTS} />
       </div>
       {res.error && <ErrorBox message={res.error} />}
       <Grid cards={items} />
       {res.loading && <Spinner />}
       {!res.loading && res.data && page < Math.min(res.data.total_pages, 500) && (
-        <div className="center"><button type="button" className="btn ghost" onClick={() => setPage(page + 1)}>Load more</button></div>
+        <div className="my-8 text-center"><Button type="button" variant="secondary" size="lg" onClick={() => setPage(page + 1)}>Load more</Button></div>
       )}
     </div>
   );
