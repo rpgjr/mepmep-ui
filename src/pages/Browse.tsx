@@ -36,7 +36,13 @@ export default function Browse({ type }: { type: MediaType }) {
 
   // Append each new page of results.
   useEffect(() => {
-    if (res.data) setItems((prev) => (page === 1 ? [] : prev).concat(toCards(res.data!.results, type)));
+    if (!res.data) return;
+    // Skip titles already shown: TMDB pages overlap, and this effect also runs once with the previous page's data.
+    setItems((prev) => {
+      const seen = new Set((page === 1 ? [] : prev).map((c) => c.id));
+      const fresh = toCards(res.data!.results, type).filter((c) => !seen.has(c.id));
+      return (page === 1 ? [] : prev).concat(fresh);
+    });
   }, [res.data, page, type]);
 
   const set = (k: string, v: string) => {
