@@ -40,7 +40,7 @@ export default function TitleActions({ card }: { card: Card }) {
   };
 
   // A pressed toggle gets the purple tint
-  const pressed = "aria-pressed:border-primary aria-pressed:bg-primary/25 aria-pressed:text-foreground";
+  const pressed = "aria-pressed:bg-primary aria-pressed:text-primary-foreground";
   return (
     <>
       <Button type="button" variant="secondary" className={pressed} onClick={() => toggle("favorites", "favorite")} aria-pressed={state.favorite}>

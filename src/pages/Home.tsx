@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { img, toCards } from "../api";
 import { useAuth } from "../auth";
 import Hero, { type HeroItem } from "../components/Hero";
-import { Row, Spinner, ErrorBox, SCROLL_STRIP } from "../components/Shelves";
+import { Row, SectionTitle, Spinner, ErrorBox, SCROLL_STRIP } from "../components/Shelves";
 import { useGet } from "../hooks";
 import type { MediaType, Progress } from "../types";
 
 const SeeAll = ({ to }: { to: string }) => (
-  <Link to={to} className="inline-flex items-center gap-0.5 text-sm font-semibold text-ring hover:underline">See all<ChevronRight className="size-4" /></Link>
+  <Link to={to} className="inline-flex items-center gap-0.5 text-sm font-semibold text-aqua hover:underline">See all<ChevronRight className="size-4" /></Link>
 );
 
 interface Page { results: Record<string, any>[] }
@@ -41,13 +41,13 @@ export default function Home() {
 
       {user && history.data && history.data.length > 0 && (
         <section className="pt-6">
-          <div className="px-4 md:px-10"><h2 className="text-xl font-bold tracking-tight md:text-2xl">Continue watching</h2></div>
+          <div className="px-4 md:px-10"><SectionTitle tone="lime">Continue watching</SectionTitle></div>
           <div className={SCROLL_STRIP}>
             {history.data.map((h) => (
               <Link key={`${h.mediaType}${h.tmdbId}`} className="group w-[calc((100%-0.3rem)/1.4)] min-w-0 shrink-0 snap-start sm:w-[calc((100%-1rem)/2.4)] lg:w-[calc((100%-2rem)/3.4)]" to={`/watch/${h.mediaType}/${h.tmdbId}?s=${h.season}&e=${h.episode}`}>
-                <div className="relative aspect-video overflow-hidden rounded-lg bg-card bg-cover bg-center ring-1 ring-white/5 transition duration-300 group-hover:scale-[1.03] group-hover:shadow-2xl group-hover:shadow-primary/30" style={{ backgroundImage: `url(${img(h.backdropPath ?? h.posterPath, "w500")})` }}>
-                  <span className="absolute inset-0 m-auto grid size-12 place-items-center rounded-full bg-black/60 text-white backdrop-blur transition group-hover:bg-primary"><Play className="fill-current" /></span>
-                  {h.durationSec > 0 && <div className="absolute inset-x-0 bottom-0 h-1 bg-white/25"><div className="h-full bg-primary" style={{ width: `${Math.min(100, (h.positionSec / h.durationSec) * 100)}%` }} /></div>}
+                <div className="relative aspect-video overflow-hidden rounded-2xl border-2 border-ink bg-card bg-cover bg-center pop bouncy transition duration-300 group-hover:-translate-y-1 group-hover:-rotate-1 group-hover:shadow-[6px_8px_0_0_var(--lime)]" style={{ backgroundImage: `url(${img(h.backdropPath ?? h.posterPath, "w500")})` }}>
+                  <span className="absolute inset-0 m-auto grid size-12 place-items-center rounded-lg border-2 border-ink bg-sun text-ink pop transition group-hover:bg-primary"><Play className="fill-current" /></span>
+                  {h.durationSec > 0 && <div className="absolute inset-x-0 bottom-0 h-2 bg-ink/70"><div className="h-full rounded-r-sm bg-lime" style={{ width: `${Math.min(100, (h.positionSec / h.durationSec) * 100)}%` }} /></div>}
                 </div>
                 <div className="mt-2 truncate text-sm font-semibold">{h.title}</div>
                 {h.mediaType === "tv" && <div className="text-xs text-muted-foreground">S{h.season} · E{h.episode}</div>}
@@ -57,12 +57,12 @@ export default function Home() {
         </section>
       )}
 
-      <Row title="Trending movies" cards={trendingMovies} />
-      <Row title="Trending series" cards={trendingTv} />
-      <Row title="Popular movies" cards={popularMovies} action={<SeeAll to="/movies" />} />
-      <Row title="Top rated movies" cards={topMovies} />
-      <Row title="Popular series" cards={popularTv} action={<SeeAll to="/tv" />} />
-      <Row title="Top rated series" cards={topTv} />
+      <Row title="Trending movies" cards={trendingMovies} tone="pink" />
+      <Row title="Trending series" cards={trendingTv} tone="aqua" />
+      <Row title="Popular movies" cards={popularMovies} tone="sun" action={<SeeAll to="/movies" />} />
+      <Row title="Top rated movies" cards={topMovies} tone="lime" />
+      <Row title="Popular series" cards={popularTv} tone="pink" action={<SeeAll to="/tv" />} />
+      <Row title="Top rated series" cards={topTv} tone="sun" />
     </>
   );
 }
