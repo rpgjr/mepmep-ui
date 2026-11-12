@@ -1,5 +1,7 @@
+import { Check, Heart, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { api, del, post } from "../api";
 import { useAuth } from "../auth";
 import type { Card } from "../types";
@@ -37,14 +39,18 @@ export default function TitleActions({ card }: { card: Card }) {
     }
   };
 
+  // A pressed toggle gets the purple tint
+  const pressed = "aria-pressed:border-primary aria-pressed:bg-primary/25 aria-pressed:text-foreground";
   return (
     <>
-      <button type="button" className={`btn ghost ${state.favorite ? "on" : ""}`} onClick={() => toggle("favorites", "favorite")} aria-pressed={state.favorite}>
-        {state.favorite ? "♥ Favorited" : "♡ Favorite"}
-      </button>
-      <button type="button" className={`btn ghost ${state.watchlist ? "on" : ""}`} onClick={() => toggle("watchlist", "watchlist")} aria-pressed={state.watchlist}>
-        {state.watchlist ? "✓ In My List" : "＋ My List"}
-      </button>
+      <Button type="button" variant="secondary" className={pressed} onClick={() => toggle("favorites", "favorite")} aria-pressed={state.favorite}>
+        <Heart className={state.favorite ? "fill-current" : ""} />
+        {state.favorite ? "Favorited" : "Favorite"}
+      </Button>
+      <Button type="button" variant="secondary" className={pressed} onClick={() => toggle("watchlist", "watchlist")} aria-pressed={state.watchlist}>
+        {state.watchlist ? <Check /> : <Plus />}
+        {state.watchlist ? "In My List" : "My List"}
+      </Button>
     </>
   );
 }

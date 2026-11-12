@@ -12,7 +12,7 @@ export default function App() {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="min-h-screen pt-14 pb-20">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/movies" element={<Browse type="movie" />} />
@@ -23,7 +23,7 @@ export default function App() {
           <Route path="/my/:tab" element={<Library />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="*" element={<p className="empty">Page not found.</p>} />
+          <Route path="*" element={<p className="px-4 py-12 text-center text-muted-foreground">Page not found.</p>} />
         </Routes>
       </main>
     </>

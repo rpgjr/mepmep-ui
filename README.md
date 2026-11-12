@@ -1,6 +1,7 @@
 # mepmep-ui (frontend)
 
 React + TypeScript + Vite app for the mepmep movie site. Talks to the `mepmep` backend repo.
+Styled with Tailwind CSS 4 and shadcn/ui components (the component code lives in `src/components/ui`, the theme colors in `src/index.css`).
 
 ## Run locally
 
@@ -29,3 +30,8 @@ npm run test:e2e     # Playwright: opens the app in a browser and clicks through
 `.github/workflows/ci.yml` runs `lint`, `build` and `e2e` on every pull request.
 `.github/workflows/security.yml` runs `secrets` (gitleaks) and `codeql`.
 Vercel deploys `main` by itself. Its settings live in the Vercel dashboard, and `vercel.json` holds the deep-link rewrite.
+
+## UI components (shadcn/ui)
+
+Add another ready-made part with `npx shadcn@latest add <name>` (for example `dialog`). The command reads `components.json` and copies the component into `src/components/ui`, where you can edit it.
+Tailwind classes go straight on the elements. To change a color for the whole site, edit it in `src/index.css`.

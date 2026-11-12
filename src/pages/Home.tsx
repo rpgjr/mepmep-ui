@@ -1,9 +1,15 @@
+import { Play, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { img, toCards } from "../api";
 import { useAuth } from "../auth";
-import { Row, Spinner, ErrorBox } from "../components/Shelves";
+import Hero, { type HeroItem } from "../components/Hero";
+import { Row, Spinner, ErrorBox, SCROLL_STRIP } from "../components/Shelves";
 import { useGet } from "../hooks";
 import type { MediaType, Progress } from "../types";
+
+const SeeAll = ({ to }: { to: string }) => (
+  <Link to={to} className="inline-flex items-center gap-0.5 text-sm font-semibold text-ring hover:underline">See all<ChevronRight className="size-4" /></Link>
+);
 
 interface Page { results: Record<string, any>[] }
 
@@ -26,35 +32,25 @@ export default function Home() {
   if (trending.loading) return <Spinner />;
   if (trending.error) return <ErrorBox message={trending.error} />;
 
-  const hero = trending.data!.results.find((r) => r.backdrop_path)!;
+  const featured: HeroItem[] = trending.data!.results.filter((r) => r.backdrop_path).slice(0, 5) as HeroItem[];
   const trendingMovies = toCards(trending.data!.results, "movie");
 
   return (
     <>
-      <section className="hero" style={{ backgroundImage: `url(${img(hero.backdrop_path, "w1280")})` }}>
-        <div className="hero-fade">
-          <span className="eyebrow">Trending this week</span>
-          <h1>{hero.title}</h1>
-          <p>{hero.overview}</p>
-          <div className="actions">
-            <Link className="btn" to={`/watch/movie/${hero.id}`}>▶ Watch now</Link>
-            <Link className="btn ghost" to={`/title/movie/${hero.id}`}>More info</Link>
-          </div>
-        </div>
-      </section>
+      {featured.length > 0 && <Hero items={featured} />}
 
       {user && history.data && history.data.length > 0 && (
-        <section className="row">
-          <div className="row-head"><h2>Continue watching</h2></div>
-          <div className="row-scroll">
+        <section className="pt-6">
+          <div className="px-4 md:px-10"><h2 className="text-xl font-bold tracking-tight md:text-2xl">Continue watching</h2></div>
+          <div className={SCROLL_STRIP}>
             {history.data.map((h) => (
-              <Link key={`${h.mediaType}${h.tmdbId}`} className="resume" to={`/watch/${h.mediaType}/${h.tmdbId}?s=${h.season}&e=${h.episode}`}>
-                <div className="resume-img" style={{ backgroundImage: `url(${img(h.backdropPath ?? h.posterPath, "w500")})` }}>
-                  <span className="play">▶</span>
-                  {h.durationSec > 0 && <div className="bar"><div style={{ width: `${Math.min(100, (h.positionSec / h.durationSec) * 100)}%` }} /></div>}
+              <Link key={`${h.mediaType}${h.tmdbId}`} className="group w-[calc((100%-0.3rem)/1.4)] min-w-0 shrink-0 snap-start sm:w-[calc((100%-1rem)/2.4)] lg:w-[calc((100%-2rem)/3.4)]" to={`/watch/${h.mediaType}/${h.tmdbId}?s=${h.season}&e=${h.episode}`}>
+                <div className="relative aspect-video overflow-hidden rounded-lg bg-card bg-cover bg-center ring-1 ring-white/5 transition duration-300 group-hover:scale-[1.03] group-hover:shadow-2xl group-hover:shadow-primary/30" style={{ backgroundImage: `url(${img(h.backdropPath ?? h.posterPath, "w500")})` }}>
+                  <span className="absolute inset-0 m-auto grid size-12 place-items-center rounded-full bg-black/60 text-white backdrop-blur transition group-hover:bg-primary"><Play className="fill-current" /></span>
+                  {h.durationSec > 0 && <div className="absolute inset-x-0 bottom-0 h-1 bg-white/25"><div className="h-full bg-primary" style={{ width: `${Math.min(100, (h.positionSec / h.durationSec) * 100)}%` }} /></div>}
                 </div>
-                <div className="card-title">{h.title}</div>
-                {h.mediaType === "tv" && <div className="card-sub">S{h.season} · E{h.episode}</div>}
+                <div className="mt-2 truncate text-sm font-semibold">{h.title}</div>
+                {h.mediaType === "tv" && <div className="text-xs text-muted-foreground">S{h.season} · E{h.episode}</div>}
               </Link>
             ))}
           </div>
@@ -63,9 +59,9 @@ export default function Home() {
 
       <Row title="Trending movies" cards={trendingMovies} />
       <Row title="Trending series" cards={trendingTv} />
-      <Row title="Popular movies" cards={popularMovies} action={<Link to="/movies">See all</Link>} />
+      <Row title="Popular movies" cards={popularMovies} action={<SeeAll to="/movies" />} />
       <Row title="Top rated movies" cards={topMovies} />
-      <Row title="Popular series" cards={popularTv} action={<Link to="/tv">See all</Link>} />
+      <Row title="Popular series" cards={popularTv} action={<SeeAll to="/tv" />} />
       <Row title="Top rated series" cards={topTv} />
     </>
   );

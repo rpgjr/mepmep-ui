@@ -36,8 +36,8 @@ function Song() {
   const src = `${YT}/embed/${SONG_ID}?autoplay=1&loop=1&playlist=${SONG_ID}&playsinline=1&rel=0&enablejsapi=1&mute=${startMuted.current ? 1 : 0}&origin=${encodeURIComponent(location.origin)}`;
   return (
     <>
-      <iframe ref={frame} className="song-audio" title="Song" src={src} allow="autoplay; encrypted-media" aria-hidden="true" tabIndex={-1} />
-      {!soundOn && <p className="muted">Tap anywhere on the page to hear the song.</p>}
+      <iframe ref={frame} className="pointer-events-none absolute size-50 border-0 opacity-0 [clip-path:inset(50%)]" title="Song" src={src} allow="autoplay; encrypted-media" aria-hidden="true" tabIndex={-1} />
+      {!soundOn && <p className="text-sm text-muted-foreground">Tap anywhere on the page to hear the song.</p>}
     </>
   );
 }
@@ -47,11 +47,13 @@ export default function WakeUp() {
   const [ratOk, setRatOk] = useState(true);
 
   return (
-    <div className="wakeup" role="status" aria-label="Waking up the server">
-      {!reduceMotion() && ratOk && <img className="rat-gif" src={RAT_GIF} alt="Dancing rat" onError={() => setRatOk(false)} />}
+    <div
+      className="wakeup flex flex-col items-center gap-3 bg-[radial-gradient(ellipse_340px_220px_at_50%_130px,oklch(0.606_0.22_293/0.28),transparent_70%)] px-4 pt-6 pb-16 text-center"
+      role="status" aria-label="Waking up the server">
+      {!reduceMotion() && ratOk && <img className="h-auto w-[min(300px,70vw)]" src={RAT_GIF} alt="Dancing rat" onError={() => setRatOk(false)} />}
 
-      <h2>Waking up the server…</h2>
-      <p className="muted">
+      <h2 className="text-lg font-semibold">Waking up the server…</h2>
+      <p className="max-w-110 text-sm text-muted-foreground">
         It sleeps when nobody has used it for a while, and this can take up to 2-3 minutes. The movies will appear on their own.
       </p>
       <Song />
