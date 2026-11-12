@@ -1,13 +1,18 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
+@import "@fontsource-variable/fredoka";
+@import "@fontsource-variable/nunito";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-heading: var(--font-sans);
-    --font-sans: 'Geist Variable', sans-serif;
+    --font-heading: 'Fredoka Variable', 'Nunito Variable', sans-serif;
+    --font-sans: 'Nunito Variable', system-ui, sans-serif;
+    --color-sun: var(--sun);
+    --color-aqua: var(--aqua);
+    --color-lime: var(--lime);
+    --color-ink: var(--ink);
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -52,43 +57,72 @@
 :root,
 .dark {
     color-scheme: dark;
-    --background: oklch(0.14 0.02 285);
-    --foreground: oklch(0.97 0.005 285);
-    --card: oklch(0.19 0.025 285);
-    --card-foreground: oklch(0.97 0.005 285);
-    --popover: oklch(0.21 0.03 285);
-    --popover-foreground: oklch(0.97 0.005 285);
-    --primary: oklch(0.606 0.22 293);
-    --primary-foreground: oklch(0.99 0 0);
-    --secondary: oklch(0.26 0.03 285);
-    --secondary-foreground: oklch(0.97 0.005 285);
-    --muted: oklch(0.24 0.03 285);
-    --muted-foreground: oklch(0.7 0.03 285);
-    --accent: oklch(0.28 0.04 285);
-    --accent-foreground: oklch(0.97 0.005 285);
-    --destructive: oklch(0.704 0.191 22);
-    --border: oklch(0.3 0.04 285);
-    --input: oklch(0.3 0.04 285);
-    --ring: oklch(0.709 0.159 293);
-    --chart-1: oklch(0.709 0.159 293);
-    --chart-2: oklch(0.606 0.22 293);
-    --chart-3: oklch(0.55 0.2 293);
-    --chart-4: oklch(0.45 0.15 293);
-    --chart-5: oklch(0.35 0.1 293);
-    --radius: 0.75rem;
-    --sidebar: oklch(0.19 0.025 285);
-    --sidebar-foreground: oklch(0.97 0.005 285);
-    --sidebar-primary: oklch(0.606 0.22 293);
-    --sidebar-primary-foreground: oklch(0.99 0 0);
-    --sidebar-accent: oklch(0.28 0.04 285);
-    --sidebar-accent-foreground: oklch(0.97 0.005 285);
-    --sidebar-border: oklch(0.3 0.04 285);
-    --sidebar-ring: oklch(0.709 0.159 293);
+    /* Colour schemes: each [data-theme] block below sets the background hue (--bg-h), the lead colour and three sidekicks. */
+    --bg-h: 285;
+    --lead: oklch(0.7 0.24 355);
+    --aqua: oklch(0.84 0.14 195);
+    --lime: oklch(0.88 0.2 135);
+    /* "Pop arcade night": ink-indigo ground, bubblegum pink lead, sun yellow / aqua / lime sidekicks */
+    --ink: oklch(0.1 0.04 var(--bg-h));
+    --background: oklch(0.15 0.045 var(--bg-h));
+    --foreground: oklch(0.97 0.012 var(--bg-h));
+    --card: oklch(0.21 0.06 var(--bg-h));
+    --card-foreground: oklch(0.97 0.012 var(--bg-h));
+    --popover: oklch(0.24 0.07 var(--bg-h));
+    --popover-foreground: oklch(0.97 0.012 var(--bg-h));
+    --primary: var(--lead);
+    --primary-foreground: oklch(0.14 0.04 var(--bg-h));
+    --secondary: oklch(0.28 0.08 var(--bg-h));
+    --secondary-foreground: oklch(0.97 0.012 var(--bg-h));
+    --muted: oklch(0.25 0.06 var(--bg-h));
+    --muted-foreground: oklch(0.76 0.05 var(--bg-h));
+    --accent: oklch(0.32 0.1 var(--bg-h));
+    --accent-foreground: oklch(0.97 0.012 var(--bg-h));
+    --destructive: oklch(0.72 0.19 25);
+    --border: oklch(0.36 0.09 var(--bg-h));
+    --input: oklch(0.36 0.09 var(--bg-h));
+    --ring: var(--aqua);
+    --sun: oklch(0.88 0.17 95);
+    --chart-1: var(--lead);
+    --chart-2: var(--sun);
+    --chart-3: var(--aqua);
+    --chart-4: var(--lime);
+    --chart-5: oklch(0.7 0.18 var(--bg-h));
+    --radius: 0.3rem;
+    --sidebar: oklch(0.21 0.06 var(--bg-h));
+    --sidebar-foreground: oklch(0.97 0.012 var(--bg-h));
+    --sidebar-primary: var(--lead);
+    --sidebar-primary-foreground: oklch(0.14 0.04 var(--bg-h));
+    --sidebar-accent: oklch(0.32 0.1 var(--bg-h));
+    --sidebar-accent-foreground: oklch(0.97 0.012 var(--bg-h));
+    --sidebar-border: oklch(0.36 0.09 var(--bg-h));
+    --sidebar-ring: var(--aqua);
+}
+
+/* Six colour schemes. "pop" is the default above. */
+:root[data-theme="ember"]  { --bg-h: 45;  --lead: oklch(0.74 0.19 48);  --aqua: oklch(0.82 0.12 190); --lime: oklch(0.86 0.17 155); }
+:root[data-theme="ocean"]  { --bg-h: 245; --lead: oklch(0.72 0.16 235); --aqua: oklch(0.86 0.14 185); --lime: oklch(0.86 0.17 160); }
+:root[data-theme="jungle"] { --bg-h: 160; --lead: oklch(0.8 0.2 145);   --aqua: oklch(0.84 0.13 205); --lime: oklch(0.9 0.19 110); }
+:root[data-theme="grape"]  { --bg-h: 305; --lead: oklch(0.7 0.22 305);  --aqua: oklch(0.84 0.13 210); --lime: oklch(0.86 0.17 150); }
+:root[data-theme="gold"]   { --bg-h: 80;  --lead: oklch(0.82 0.16 85);  --aqua: oklch(0.8 0.1 200);   --lime: oklch(0.85 0.15 140); }
+
+/* Chunky "sticker" look: a hard offset shadow instead of a blur. Presses flat on click. */
+@utility pop {
+    box-shadow: 3px 3px 0 0 var(--ink);
+}
+@utility pop-lg {
+    box-shadow: 6px 6px 0 0 var(--ink);
+}
+@utility bouncy {
+    transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+  h1, h2, h3, h4 {
+    @apply font-heading;
   }
   html {
     @apply font-sans;
@@ -96,6 +130,14 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* faint confetti dots */
+    background-image:
+      radial-gradient(circle at 12% 18%, color-mix(in oklch, var(--primary) 14%, transparent) 0 2px, transparent 3px),
+      radial-gradient(circle at 78% 62%, color-mix(in oklch, var(--aqua) 14%, transparent) 0 2px, transparent 3px);
+    background-size: 90px 90px, 130px 130px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
   }
   img {
     @apply block max-w-full;

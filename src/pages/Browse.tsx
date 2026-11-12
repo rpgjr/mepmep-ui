@@ -47,8 +47,8 @@ export default function Browse({ type }: { type: MediaType }) {
 
   return (
     <div className="mx-auto max-w-400 px-4 py-6 md:px-10">
-      <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">{type === "movie" ? "Movies" : "Series"}</h1>
-      <div className="sticky top-14 z-10 -mx-4 mt-4 flex flex-wrap gap-2.5 bg-background/80 px-4 py-3 backdrop-blur-xl md:-mx-10 md:px-10">
+      <h1 className="inline-block -rotate-1 rounded-2xl border-2 border-ink bg-primary px-4 py-1 text-3xl font-bold tracking-tight text-primary-foreground pop md:text-4xl">{type === "movie" ? "Movies" : "Series"}</h1>
+      <div className="sticky top-14 z-10 -mx-4 mt-4 flex flex-wrap gap-2.5 bg-background/85 px-4 py-3 backdrop-blur-xl md:-mx-10 md:px-10">
         <Dropdown
           label="Genre"
           value={genre || "all"}

@@ -17,10 +17,23 @@ export const ROW_ITEM =
 
 /** Arrows only exist for a mouse; on touch screens the row is swiped. */
 const ARROW =
-  "absolute top-[calc(50%-1.5rem)] z-20 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white opacity-0 backdrop-blur transition hover:bg-primary group-hover/row:opacity-100 [@media(hover:hover)_and_(pointer:fine)]:flex";
+  "absolute top-[calc(50%-1.5rem)] z-20 hidden size-11 -translate-y-1/2 items-center justify-center rounded-lg border-2 border-ink bg-sun text-ink pop opacity-0 transition hover:bg-primary group-hover/row:opacity-100 [@media(hover:hover)_and_(pointer:fine)]:flex";
 
 /** Horizontal scrolling row with a heading. */
-export function Row({ title, cards, action }: { title: string; cards: Card[]; action?: ReactNode }) {
+export const TONES = { pink: "bg-primary", sun: "bg-sun", aqua: "bg-aqua", lime: "bg-lime" } as const;
+export type Tone = keyof typeof TONES;
+
+/** Section heading: a tilted colour block in front of the title, like a sticker. */
+export function SectionTitle({ children, tone = "pink" }: { children: ReactNode; tone?: Tone }) {
+  return (
+    <h2 className="flex items-center gap-3 text-xl font-bold tracking-tight md:text-2xl">
+      <span aria-hidden="true" className={`size-5 shrink-0 rotate-12 rounded-md border-2 border-ink ${TONES[tone]} pop`} />
+      {children}
+    </h2>
+  );
+}
+
+export function Row({ title, cards, action, tone }: { title: string; cards: Card[]; action?: ReactNode; tone?: Tone }) {
   const scroller = useRef<HTMLDivElement>(null);
   if (!cards.length) return null;
   const scrollBy = (dir: 1 | -1) =>
@@ -28,7 +41,7 @@ export function Row({ title, cards, action }: { title: string; cards: Card[]; ac
   return (
     <section className="pt-6">
       <div className="flex items-center justify-between gap-3 px-4 md:px-10">
-        <h2 className="text-xl font-bold tracking-tight md:text-2xl">{title}</h2>
+        <SectionTitle tone={tone}>{title}</SectionTitle>
         {action}
       </div>
       <div className="group/row relative">
@@ -76,7 +89,7 @@ export function Spinner() {
   return (
     <div role="status" aria-label="Loading">
       {/* "spinner" is only a hook for the tests */}
-      <div className="spinner mx-auto my-15 size-9 animate-spin rounded-full border-4 border-border border-t-primary" />
+      <div className="spinner mx-auto my-15 size-9 animate-spin rounded-full border-4 border-accent border-t-primary border-r-sun border-b-aqua" />
     </div>
   );
 }

@@ -31,14 +31,14 @@ export default function Library() {
   return (
     <div className="mx-auto max-w-400 px-4 py-6 md:px-10">
       <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">My List</h1>
-      <div className="my-5 flex gap-6 overflow-x-auto border-b border-border" role="tablist">
+      <div className="my-5 flex gap-6 overflow-x-auto border-b-2 border-ink" role="tablist">
         {TABS.map((t) => (
           <Link
             key={t.key}
             to={`/my/${t.key}`}
             role="tab"
             aria-selected={t.key === tab}
-            className={cn("-mb-px border-b-2 pb-3 text-base font-semibold whitespace-nowrap transition-colors", t.key === tab ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground")}
+            className={cn("-mb-px border-b-4 pb-3 font-heading text-lg font-semibold whitespace-nowrap transition-colors", t.key === tab ? "border-sun text-sun" : "border-transparent text-muted-foreground hover:text-foreground")}
           >
             {t.label}
           </Link>
@@ -93,7 +93,7 @@ function History() {
             className="relative block aspect-video w-37.5 shrink-0 overflow-hidden rounded-xl bg-muted bg-cover bg-center max-sm:w-30"
             style={{ backgroundImage: `url(${img(h.backdropPath ?? h.posterPath, "w500")})` }}
           >
-            <span className="absolute inset-0 m-auto grid size-11 place-items-center rounded-full bg-black/60 text-white"><Play className="fill-current" /></span>
+            <span className="absolute inset-0 m-auto grid size-11 place-items-center rounded-lg bg-black/60 text-white"><Play className="fill-current" /></span>
             {h.durationSec > 0 && <div className="absolute inset-x-0 bottom-0 h-1 bg-white/25"><div className="h-full bg-primary" style={{ width: `${Math.min(100, (h.positionSec / h.durationSec) * 100)}%` }} /></div>}
           </Link>
           <div className="flex min-w-0 flex-col gap-1">

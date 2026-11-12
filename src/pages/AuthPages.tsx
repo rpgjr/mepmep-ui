@@ -35,11 +35,11 @@ function AuthForm({ mode }: { mode: "login" | "register" }) {
 
   const isLogin = mode === "login";
   return (
-    <div className="relative grid min-h-[calc(100vh-8.5rem)] place-items-center overflow-hidden px-4 py-10 before:absolute before:-top-24 before:left-1/2 before:size-120 before:-translate-x-1/2 before:rounded-full before:bg-primary/25 before:blur-3xl">
-      <Card className="relative w-full max-w-100 bg-card/80 shadow-2xl backdrop-blur-xl">
+    <div className="relative grid min-h-[calc(100vh-8.5rem)] place-items-center overflow-hidden px-4 py-10 before:absolute before:-top-24 before:left-1/2 before:size-120 before:-translate-x-1/2 before:rounded-lg before:bg-primary/30 before:blur-3xl after:absolute after:right-[12%] after:bottom-[18%] after:size-40 after:rounded-lg after:bg-aqua/20 after:blur-3xl">
+      <Card className="relative w-full max-w-100 rotate-1 rounded-3xl border-4 border-ink bg-card pop-lg shadow-[8px_8px_0_0_var(--primary)] ring-0">
         <form onSubmit={submit} className="grid gap-4">
           <CardHeader>
-            <p className="mb-1 text-2xl font-extrabold tracking-tight">mep<span className="text-primary">mep</span></p>
+            <p className="mb-1 font-heading text-3xl font-bold tracking-tight"><span className="text-sun">mep</span><span className="text-primary">mep</span><span className="text-aqua">!</span></p>
             <h1 className="text-xl font-bold">{isLogin ? "Welcome back" : "Create your account"}</h1>
             <CardDescription>{isLogin ? "Log in to see your lists." : "Save favorites and pick up where you left off."}</CardDescription>
           </CardHeader>

@@ -151,11 +151,11 @@ export default function Watch() {
         {/* Theater: the player, then what you can do with it */}
         <div className="min-w-0">
           <div className="mb-3 flex flex-col gap-1.5 px-4 sm:px-0">
-            <Link to={`/title/${type}/${id}`} className="inline-flex items-center gap-1 text-sm font-semibold text-ring"><ArrowLeft className="size-4" />Details</Link>
+            <Link to={`/title/${type}/${id}`} className="inline-flex items-center gap-1 text-sm font-bold text-aqua"><ArrowLeft className="size-4" />Details</Link>
             <h1 className="text-2xl font-extrabold tracking-tight">{name}{isTv && <span className="font-normal text-muted-foreground"> · S{season} E{episode}{currentEp ? ` – ${currentEp.name}` : ""}</span>}</h1>
           </div>
 
-          <div className="relative grid aspect-video w-full place-items-center overflow-hidden bg-black shadow-2xl shadow-primary/10 ring-1 ring-white/10 sm:rounded-xl">
+          <div className="relative grid aspect-video w-full place-items-center overflow-hidden bg-black border-4 border-ink shadow-[8px_8px_0_0_var(--primary)] sm:rounded-3xl">
             {startAt === null ? (
               <Spinner />
             ) : (
@@ -178,7 +178,7 @@ export default function Watch() {
               <Button type="button" onClick={() => goTo(season, nextEp.episode_number)}>Next episode<Play className="fill-current" /></Button>
             )}
             <div className="ml-auto flex min-w-0 items-center gap-2">
-              <span className="text-sm text-muted-foreground">Source</span>
+              <span className="text-sm font-bold text-muted-foreground">Source</span>
               <Dropdown
                 label="Video source"
                 value={source}
@@ -187,7 +187,7 @@ export default function Watch() {
                 className="h-9 max-w-[70vw]"
               />
             </div>
-            {!user && <span className="text-sm text-muted-foreground">Log in to save your progress. <Link className="text-ring" to="/login" state={{ from: `/watch/${type}/${id}` }}>Log in</Link></span>}
+            {!user && <span className="text-sm text-muted-foreground">Log in to save your progress. <Link className="font-bold text-aqua" to="/login" state={{ from: `/watch/${type}/${id}` }}>Log in</Link></span>}
           </div>
 
           {source !== "embedwave" && (
@@ -201,7 +201,7 @@ export default function Watch() {
         </div>
 
         {isTv && (
-          <aside className="mx-4 min-w-0 self-start rounded-xl bg-card/60 p-3 ring-1 ring-white/5 sm:mx-0 lg:sticky lg:top-18 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
+          <aside className="mx-4 min-w-0 self-start rounded-3xl border-2 border-ink bg-card p-3 pop sm:mx-0 lg:sticky lg:top-18 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-lg font-bold">Episodes</h2>
               <Dropdown
@@ -218,13 +218,13 @@ export default function Watch() {
                   type="button"
                   key={ep.episode_number}
                   className={cn(
-                    "flex gap-3 rounded-lg border border-transparent p-2 text-left transition-colors hover:bg-muted",
-                    ep.episode_number === episode && "border-primary bg-primary/15",
+                    "flex gap-3 rounded-2xl border-2 border-transparent p-2 text-left transition-colors hover:bg-muted",
+                    ep.episode_number === episode && "border-ink bg-primary/20 pop",
                   )}
                   onClick={() => { goTo(season, ep.episode_number); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                 >
                   <div className="relative aspect-video w-32 shrink-0 rounded-md bg-muted bg-cover bg-center max-sm:w-28" style={{ backgroundImage: ep.still_path ? `url(${img(ep.still_path, "w300")})` : undefined }}>
-                    <span className="absolute bottom-1 left-1 rounded bg-black/75 px-1.5 text-xs font-bold">{ep.episode_number}</span>
+                    <span className="absolute bottom-1 left-1 rounded-lg bg-sun px-2 text-ink text-xs font-bold">{ep.episode_number}</span>
                   </div>
                   <div className="min-w-0">
                     <strong className="line-clamp-1 block text-sm">{ep.name}</strong>

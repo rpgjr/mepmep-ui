@@ -1,4 +1,4 @@
-import { Info, Play, Star } from "lucide-react";
+import { Flame, Info, Play, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { buttonVariants } from "@/components/ui/button";
@@ -49,27 +49,27 @@ export default function Hero({ items }: { items: HeroItem[] }) {
           style={{ backgroundImage: `url(${img(it.backdrop_path, "w1280")})` }}
         />
       ))}
-      <div className="absolute inset-0 bg-linear-to-t from-background via-background/30 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-t from-background via-background/40 to-transparent" />
       <div className="absolute inset-0 bg-linear-to-r from-background/85 via-background/30 to-transparent" />
 
       <div className="relative flex min-h-[78vh] items-end px-4 pt-32 pb-16 max-sm:min-h-[66vh] max-sm:pb-12 md:px-10">
         <div className="max-w-2xl">
-          <span className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.2em] text-ring uppercase">
-            <span className="h-px w-8 bg-ring" />
+          <span className="inline-flex items-center gap-2 rotate-[-2deg] rounded-lg border-2 border-ink bg-sun px-3.5 py-1 text-xs font-extrabold tracking-[0.15em] text-ink uppercase pop">
+            <Flame className="size-3.5" />
             Trending this week
           </span>
-          <h1 className="mt-3 mb-3 text-[clamp(2.2rem,7vw,4.5rem)] leading-[1.02] font-extrabold tracking-tight text-balance">{item.title}</h1>
+          <h1 className="mt-3 mb-3 text-[clamp(2.2rem,7vw,4.5rem)] leading-[1.02] font-extrabold tracking-tight text-balance [text-shadow:4px_4px_0_var(--ink)]">{item.title}</h1>
           <div className="mb-3 flex items-center gap-3 text-sm font-medium text-foreground/80">
-            <span className="inline-flex items-center gap-1 text-amber-300"><Star className="size-4 fill-current" />{item.vote_average.toFixed(1)}</span>
+            <span className="inline-flex items-center gap-1 text-sun"><Star className="size-4 fill-current" />{item.vote_average.toFixed(1)}</span>
             {year && <span>{year}</span>}
-            <span className="rounded border border-foreground/30 px-1.5 text-xs tracking-wider">MOVIE</span>
+            <span className="rounded-lg border-2 border-ink bg-aqua px-2.5 text-xs font-extrabold tracking-wider text-ink">MOVIE</span>
           </div>
           <p className="line-clamp-3 max-w-xl text-base text-foreground/80 max-sm:line-clamp-2">{item.overview}</p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link {...hold} className={cn(buttonVariants({ size: "lg" }), "shadow-lg shadow-primary/30")} to={`/watch/movie/${item.id}`}>
+            <Link {...hold} className={buttonVariants({ size: "lg" })} to={`/watch/movie/${item.id}`}>
               <Play className="fill-current" />Watch now
             </Link>
-            <Link {...hold} className={cn(buttonVariants({ variant: "secondary", size: "lg" }), "bg-white/15 backdrop-blur hover:bg-white/25")} to={`/title/movie/${item.id}`}>
+            <Link {...hold} className={buttonVariants({ variant: "secondary", size: "lg" })} to={`/title/movie/${item.id}`}>
               <Info />More info
             </Link>
           </div>
@@ -86,7 +86,7 @@ export default function Hero({ items }: { items: HeroItem[] }) {
                 aria-label={`Show ${it.title}`}
                 aria-current={i === index}
                 onClick={() => setIndex(i)}
-                className={cn("h-1.5 rounded-full transition-all", i === index ? "w-8 bg-primary" : "w-4 bg-white/35 hover:bg-white/60")}
+                className={cn("rounded-sm transition-all", "border-2 border-ink h-3", i === index ? "w-9 bg-primary" : "w-4 bg-sun/70 hover:bg-sun")}
               />
             ))}
           </fieldset>
