@@ -56,11 +56,38 @@ test("a guest who taps a list button is sent to log in", async ({ page }) => {
   await expect(page).toHaveURL(/\/login/);
 });
 
+test("password rules gate the sign-up button", async ({ page }) => {
+  await page.goto("/register");
+  const signUp = page.getByRole("button", { name: "Sign up" });
+  await page.getByLabel("Password").fill("short");
+  await expect(signUp).toBeDisabled();
+  await page.getByLabel("Password").fill("longenough1");   // no special character yet
+  await expect(signUp).toBeDisabled();
+  await page.getByLabel("Password").fill("longenough1!");
+  await expect(signUp).toBeEnabled();
+});
+
+test("sample emails are refused with a message", async ({ page }) => {
+  await page.goto("/register");
+  const email = page.getByLabel("Email");
+  const signUp = page.getByRole("button", { name: "Sign up" });
+  await page.getByLabel("Password").fill("secret-123");
+  for (const bad of ["test@gmail.com", "sample@email.com", "john@example.com", "asdf@yahoo.com", "nope"]) {
+    await email.fill(bad);
+    await email.blur();
+    await expect(page.getByRole("alert").filter({ hasText: /sample email|valid email/ })).toBeVisible();
+    await expect(signUp).toBeDisabled();
+  }
+  await email.fill("maria.santos@gmail.com");
+  await expect(page.getByRole("alert").filter({ hasText: /sample email|valid email/ })).toHaveCount(0);
+  await expect(signUp).toBeEnabled();
+});
+
 test("sign up logs the user in, and log out signs them out", async ({ page }) => {
   await page.goto("/register");
   await page.getByLabel("Display name").fill("Tester");
-  await page.getByLabel("Email").fill("tester@example.com");
-  await page.getByLabel("Password").fill("secret123");
+  await page.getByLabel("Email").fill("maria.santos@gmail.com");
+  await page.getByLabel("Password").fill("secret-123");
   await page.getByRole("button", { name: "Sign up" }).click();
 
   await expect(page.getByText("Hi, Tester")).toBeVisible();

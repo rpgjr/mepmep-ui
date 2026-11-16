@@ -31,7 +31,8 @@ export async function mockApi(p: Page, opts: { down?: boolean } = {}) {
     const path = url.pathname.replace(/^.*\/api/, "");
     const method = route.request().method();
 
-    if (path === "/auth/register" || path === "/auth/login") return json(route, { token: "test-token", user: USER }, 201);
+    if (path === "/auth/register") return json(route, { token: "test-token", user: USER }, 201);
+    if (path === "/auth/login") return json(route, { token: "test-token", user: USER });
     if (path === "/auth/me") return json(route, USER);
     if (path.startsWith("/library/status")) return json(route, { favorite: false, watchlist: false });
     if (path.startsWith("/history")) return json(route, method === "GET" ? [] : {});
